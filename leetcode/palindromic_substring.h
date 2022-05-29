@@ -52,45 +52,37 @@ string longest_palimdromic_substr_1(const string& str)
 //O(log(N) * N^2)
 string longest_palindromic_substr_2(const string& str)
 {
-    size_t best_len(0);
-    string best_match;
-
+    size_t max_len(1), index(0);
     size_t length = str.length();
 
     for (int i : {0, 1})
     {
-        int low = 1, high = length;
+        int left = 1, right = length;
 
-        if (low % 2 != i)
-            low++;
-
-        if (high % 2 != i)
-            high--;
-
-        while (low <= high)
+        while (left <= right)
         {
-            int palindrome_len = (low + high) / 2;
+            int next_len = (left + right) / 2;
             
-            if (palindrome_len % 2 != i)
-                palindrome_len++;
+            if (next_len % 2 != i)
+                next_len++;
 
-            int start_index = find_palindrome(palindrome_len, str);
+            int start_index = find_palindrome(next_len, str);
 
             if (start_index != -1)
             {
-                if (palindrome_len > best_len)
+                if (next_len > max_len)
                 {
-                    best_len = palindrome_len;
-                    best_match = str.substr(start_index, palindrome_len);
+                    max_len = next_len;
+                    index = start_index;
                 }
-                low = palindrome_len + 2;
+                left = next_len + 2;
             }
             else
-                high = palindrome_len - 2;
+                right = next_len - 2;
         }
     }
 
-    return best_match;
+    return str.substr(index, max_len);
 } 
 
 //O(N^2)
